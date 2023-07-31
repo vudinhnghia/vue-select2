@@ -13,10 +13,14 @@ export default {
     name: 'Select2',
     data() {
         return {
-            select2: null
+            select2: null,
+            existEmitSelected: false
         };
     },
-    emits: ['update:modelValue'],
+    emits: [
+        'update:modelValue',
+        'select'
+    ],
     props: {
         modelValue: [String, Array], // previously was `value: String`
         id: {
@@ -66,7 +70,9 @@ export default {
     methods: {
         init(objConfig = null) {
             if (this.select2) {
-                this.select2.select2('destroy');
+                $(this.$el).find('select').select2('destroy');
+                $(this.$el).find('select').off('select2:select');
+                this.select2.empty();
             }
 
             let settings = {
@@ -85,7 +91,7 @@ export default {
             this.select2 = $(this.$el)
                 .find('select')
                 .select2(settings)
-                .on('select2:select select2:unselect', ev => {
+                .on('select2:select', ev => {
                     this.$emit('update:modelValue', this.select2.val());
                     this.$emit('select', ev['params']['data']);
                 });
@@ -110,7 +116,6 @@ export default {
         }
     },
     mounted() {
-        console.log('npm select2 init')
         this.init();
     },
     beforeUnmount() {
