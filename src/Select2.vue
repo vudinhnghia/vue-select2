@@ -64,18 +64,27 @@ export default {
         },
     },
     methods: {
-        init() {
+        init(objConfig = null) {
             if (this.select2) {
                 this.select2.select2('destroy');
             }
 
+            let settings = {
+                placeholder: this.placeholder,
+                ...this.settings,
+                data: this.options
+            }
+
+            if(objConfig){
+                settings = {
+                    ...settings,
+                    ...objConfig
+                }
+            }
+
             this.select2 = $(this.$el)
                 .find('select')
-                .select2({
-                    placeholder: this.placeholder,
-                    ...this.settings,
-                    data: this.options
-                })
+                .select2(settings)
                 .on('select2:select select2:unselect', ev => {
                     this.$emit('update:modelValue', this.select2.val());
                     this.$emit('select', ev['params']['data']);
@@ -101,6 +110,7 @@ export default {
         }
     },
     mounted() {
+        console.log('npm select2 init')
         this.init();
     },
     beforeUnmount() {
