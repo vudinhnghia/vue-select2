@@ -72,6 +72,7 @@ export default {
             if (this.select2) {
                 $(this.$el).find('select').select2('destroy');
                 $(this.$el).find('select').off('select2:select');
+                $(this.$el).find('select').off('select2:unselect');
                 this.select2.empty();
             }
 
@@ -91,7 +92,7 @@ export default {
             this.select2 = $(this.$el)
                 .find('select')
                 .select2(settings)
-                .on('select2:select', ev => {
+                .on('select2:select select2:unselect', ev => {
                     this.$emit('update:modelValue', this.select2.val());
                     this.$emit('select', ev['params']['data']);
                 });
