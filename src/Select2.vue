@@ -73,6 +73,8 @@ export default {
                 $(this.$el).find('select').select2('destroy');
                 $(this.$el).find('select').off('select2:select');
                 $(this.$el).find('select').off('select2:unselect');
+                $(this.$el).find('select').off('change');
+                $(this.$el).find('select').off('select2:clear');
                 this.select2.empty();
             }
 
@@ -92,9 +94,20 @@ export default {
             this.select2 = $(this.$el)
                 .find('select')
                 .select2(settings)
-                .on('select2:select select2:unselect', ev => {
+                .on('select2:select', ev => {
                     this.$emit('update:modelValue', this.select2.val());
                     this.$emit('select', ev['params']['data']);
+                })
+                .on('select2:unselect', ev => {
+                    this.$emit('update:modelValue', this.select2.val());
+                    this.$emit('unselect', ev['params']['data']);
+                })
+                .on('change', ev => {
+                    this.$emit('change', ev);
+                })
+                .on('select2:clear', ev => {
+                    this.$emit('update:modelValue', null);
+                    this.$emit('clear');
                 });
             this.setValue(this.modelValue);
         },
