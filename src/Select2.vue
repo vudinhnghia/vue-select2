@@ -106,7 +106,6 @@ export default {
                     this.$emit('change', ev);
                 })
                 .on('select2:clear', ev => {
-                    this.$emit('update:modelValue', null);
                     this.$emit('clear');
                 });
             this.setValue(this.modelValue);
